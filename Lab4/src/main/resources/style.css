@@ -1,0 +1,43 @@
+.root {
+    -fx-background-color: #fff;
+}
+
+.text-field {
+    -fx-font-family: "Microsoft JhengHei UI";
+    -fx-font-size: 13;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: #9b9b9b;
+    -fx-background-color: #fff;
+    -fx-padding: 0 0 0 7;
+    -fx-pref-height: 32;
+}
+
+.text-field:focused {
+    -fx-border-color: #38ef7d;
+}
+
+.button{
+    -fx-pref-width: 32;
+    -fx-pref-height: 32;
+    -fx-background-color: #fff;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+#findButton {
+    -fx-background-image: url("icons/search.png");
+}
+
+#addButton {
+    -fx-background-image: url("icons/plus.png");
+}
+
+#commitAdd,
+#commitFind {
+    -fx-background-image: url("icons/check.png");
+}
+
+#cancelAdd,
+#cancelFind {
+    -fx-background-image: url("icons/close.png");
+}
