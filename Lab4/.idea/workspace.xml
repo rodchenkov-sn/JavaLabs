@@ -33,6 +33,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -207,22 +210,22 @@
       <screen x="0" y="0" width="1536" height="864" />
     </state>
     <state x="549" y="187" key="FileChooserDialogImpl/0.0.1536.864@0.0.1536.864" timestamp="1586978325895" />
-    <state width="1493" height="157" key="GridCell.Tab.0.bottom" timestamp="1586981047716">
+    <state width="1493" height="157" key="GridCell.Tab.0.bottom" timestamp="1586981597871">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="157" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1586981047716" />
-    <state width="1493" height="157" key="GridCell.Tab.0.center" timestamp="1586981047716">
+    <state width="1493" height="157" key="GridCell.Tab.0.bottom/0.0.1536.864@0.0.1536.864" timestamp="1586981597871" />
+    <state width="1493" height="157" key="GridCell.Tab.0.center" timestamp="1586981597871">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="157" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1586981047716" />
-    <state width="1493" height="157" key="GridCell.Tab.0.left" timestamp="1586981047716">
+    <state width="1493" height="157" key="GridCell.Tab.0.center/0.0.1536.864@0.0.1536.864" timestamp="1586981597871" />
+    <state width="1493" height="157" key="GridCell.Tab.0.left" timestamp="1586981597871">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="157" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1586981047716" />
-    <state width="1493" height="157" key="GridCell.Tab.0.right" timestamp="1586981047716">
+    <state width="1493" height="157" key="GridCell.Tab.0.left/0.0.1536.864@0.0.1536.864" timestamp="1586981597871" />
+    <state width="1493" height="157" key="GridCell.Tab.0.right" timestamp="1586981597871">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
-    <state width="1493" height="157" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1586981047716" />
+    <state width="1493" height="157" key="GridCell.Tab.0.right/0.0.1536.864@0.0.1536.864" timestamp="1586981597871" />
     <state x="286" y="566" width="711" height="247" key="GridCell.Tab.1.bottom" timestamp="1586954835369">
       <screen x="0" y="0" width="1536" height="864" />
     </state>
