@@ -1,10 +1,10 @@
 .root {
+    -fx-font-family: "Microsoft JhengHei UI";
+    -fx-font-size: 13;
     -fx-background-color: #fff;
 }
 
-.text-field {
-    -fx-font-family: "Microsoft JhengHei UI";
-    -fx-font-size: 13;
+#mainBox .text-field {
     -fx-border-width: 0 0 2 0;
     -fx-border-color: #9b9b9b;
     -fx-background-color: #fff;
@@ -12,7 +12,7 @@
     -fx-pref-height: 32;
 }
 
-.text-field:focused {
+#mainBox .text-field:focused {
     -fx-border-color: #38ef7d;
 }
 
@@ -40,4 +40,25 @@
 #cancelAdd,
 #cancelFind {
     -fx-background-image: url("icons/close.png");
+}
+
+.table-view .column-header,
+.table-view .column-header-background .filler {
+    -fx-background-color: #9b9b9b;
+}
+.table-view .cell{
+    -fx-cell-size: 35;
+    -fx-background-color: #fff;
+    -fx-border-color: #fff;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-view .column-header .label{
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+.table-row-cell:selected {
+    -fx-text-background-color: black;
+    -fx-font-weight: bold;
 }

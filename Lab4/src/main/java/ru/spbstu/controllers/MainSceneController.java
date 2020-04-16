@@ -18,6 +18,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import ru.spbstu.Main;
 import ru.spbstu.database.Item;
@@ -59,7 +60,21 @@ public class MainSceneController implements Initializable {
         prodIdCol.setCellValueFactory(new PropertyValueFactory<>("prodId"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-        priceCol.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        priceCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Integer>() {
+            @Override
+            public String toString(Integer integer) {
+                return integer.toString();
+            }
+
+            @Override
+            public Integer fromString(String s) {
+                try {
+                    return Integer.parseInt(s);
+                } catch (NumberFormatException e) {
+                    return -1;
+                }
+            }
+        }));
         itemTable.setItems(dataList);
         makeNumberOnly(minPriceField);
         makeNumberOnly(maxPriceField);
@@ -90,6 +105,8 @@ public class MainSceneController implements Initializable {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+        } finally {
+            reloadData();
         }
     }
 
