@@ -1,8 +1,5 @@
 package ru.spbstu.controllers;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,7 +16,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
-import javafx.util.converter.IntegerStringConverter;
 import ru.spbstu.Main;
 import ru.spbstu.database.Item;
 
@@ -55,7 +51,7 @@ public class MainSceneController implements Initializable {
         try {
             dataList.addAll(Main.dataBase.getAllItems());
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            Main.showError("An SQL error occurred while refreshing content.", e.getMessage());
         }
         prodIdCol.setCellValueFactory(new PropertyValueFactory<>("prodId"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -104,7 +100,7 @@ public class MainSceneController implements Initializable {
                 Main.dataBase.changePrice(editedTitle, newPrice);
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            Main.showError("An SQL error occurred while editing item price.", e.getMessage());
         } finally {
             reloadData();
         }
@@ -117,7 +113,7 @@ public class MainSceneController implements Initializable {
                 Main.dataBase.deleteItem(selected.getTitle());
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            Main.showError("An SQL error occurred while deleting item.", e.getMessage());
         } finally {
             reloadData();
         }
@@ -153,7 +149,7 @@ public class MainSceneController implements Initializable {
             dataList.addAll(items);
             clearFields();
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            Main.showError("An SQL error occurred while searching.", e.getMessage());
         }
     }
 
@@ -182,7 +178,7 @@ public class MainSceneController implements Initializable {
                 clearFields();
                 reloadData();
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
+                Main.showError("An SQL error occurred while adding item.", e.getMessage());
             }
         }
     }
@@ -193,7 +189,7 @@ public class MainSceneController implements Initializable {
             dataList.clear();
             dataList.addAll(freshData);
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            Main.showError("An SQL error occurred while refreshing content.", e.getMessage());
         }
     }
 
