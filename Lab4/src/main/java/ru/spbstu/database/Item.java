@@ -7,9 +7,9 @@ public class Item {
 
     public static final int maxTitleLength = 200;
 
-    private final SimpleIntegerProperty prodId = new SimpleIntegerProperty();
-    private final SimpleStringProperty title = new SimpleStringProperty();
-    private final SimpleIntegerProperty price = new SimpleIntegerProperty();
+    private int prodId;
+    private String title;
+    private int price;
 
     public Item() {
         this(1, "", 1);
@@ -25,29 +25,29 @@ public class Item {
         if (price <= 0) {
             throw new IllegalArgumentException("price must be a positive integer.");
         }
-        this.prodId.set(prodId);
-        this.title.set(title);
-        this.price.set(price);
+        this.prodId = prodId;
+        this.title = title;
+        this.price = price;
     }
 
     public int getProdId() {
-        return prodId.get();
+        return prodId;
     }
     public String getTitle() {
-        return title.get();
+        return title;
     }
     public int getPrice() {
-        return price.get();
+        return price;
     }
 
     public void setProdId(int prodId) {
-        this.prodId.set(prodId);
+        this.prodId = prodId;
     }
     public void setTitle(String title) {
-        this.title.set(title);
+        this.title = title;
     }
     public void setPrice(int price) {
-        this.price.set(price);
+        this.price = price;
     }
 
 }

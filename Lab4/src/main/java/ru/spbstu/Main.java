@@ -21,11 +21,7 @@ public class Main extends Application {
     public static DataBase dataBase;
 
     public static void main(String[] args) {
-        try {
-            launch();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+        launch();
     }
 
     @Override
@@ -36,8 +32,8 @@ public class Main extends Application {
             var url = settings.get("database", "url");
             var user = settings.get("database", "user");
             var password = settings.get("database", "password");
-            int minWidth = settings.get("window", "min-width", int.class);
-            int minHeight = settings.get("window", "min-height", int.class);
+            var minWidth = settings.get("window", "min-width", int.class);
+            var minHeight = settings.get("window", "min-height", int.class);
             dataBase = new DataBase(url, user, password);
 
             primaryStage.setTitle("Items");
