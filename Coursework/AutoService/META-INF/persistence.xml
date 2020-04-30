@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="persistenceUnit">
+        <class>ru.spbstu.autoservice.model.AutomobileTableEntity</class>
+        <class>ru.spbstu.autoservice.model.JournalTableEntity</class>
+        <class>ru.spbstu.autoservice.model.PersonnelTableEntity</class>
+        <class>ru.spbstu.autoservice.model.RouteTableEntity</class>
+        <properties>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/auto_service_db"/>
+            <property name="hibernate.connection.user" value="auto_service_user"/>
+            <property name="hibernate.connection.password" value="AyanamiMandelbrot"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
+        </properties>
+    </persistence-unit>
+</persistence>
