@@ -2,8 +2,11 @@ package ru.spbstu.autoservice.service;
 
 import org.springframework.stereotype.Service;
 import ru.spbstu.autoservice.model.*;
+import ru.spbstu.autoservice.repository.AutomobileTableRepository;
+import ru.spbstu.autoservice.repository.JournalTableRepository;
+import ru.spbstu.autoservice.repository.PersonnelTableRepository;
+import ru.spbstu.autoservice.repository.RouteTableRepository;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +49,14 @@ public class AutomobileDataBaseService {
         personnelTableRepository.save(personnelTableEntity);
     }
 
+    public boolean deletePersonnelById(int id) {
+        if (automobileTableRepository.getAllByDriver_Id(id).isEmpty()) {
+            personnelTableRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
     //
     //  automobiles
     //
@@ -74,6 +85,14 @@ public class AutomobileDataBaseService {
         }
     }
 
+    public boolean deleteAutomobileById(int id) {
+        if (journalTableRepository.findAllByAutomobile_Id(id).isEmpty()) {
+            automobileTableRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
     //
     //  routes
     //
@@ -90,6 +109,14 @@ public class AutomobileDataBaseService {
 
     public void addRoute(RouteTableEntity routeTableEntity) {
         routeTableRepository.save(routeTableEntity);
+    }
+
+    public boolean deleteRouteById(int id) {
+        if (journalTableRepository.findAllByAutomobile_Id(id).isEmpty()) {
+            routeTableRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     //
@@ -121,6 +148,10 @@ public class AutomobileDataBaseService {
         } else {
             return false;
         }
+    }
+
+    public void deleteJournalById(int id) {
+        journalTableRepository.deleteById(id);
     }
 
 }

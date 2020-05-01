@@ -2,8 +2,8 @@ package ru.spbstu.autoservice.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import ru.spbstu.autoservice.deserialization.RouteTableEntityDeserializer;
-import ru.spbstu.autoservice.serialization.RouteTableEntitySerializer;
+import ru.spbstu.autoservice.model.deserialization.RouteTableEntityDeserializer;
+import ru.spbstu.autoservice.model.serialization.RouteTableEntitySerializer;
 
 import javax.persistence.*;
 import java.util.HashSet;

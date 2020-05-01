@@ -79,8 +79,8 @@ package ru.spbstu.autoservice.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import ru.spbstu.autoservice.deserialization.PersonnelTableEntityDeserializer;
-import ru.spbstu.autoservice.serialization.PersonnelTableEntitySerializer;
+import ru.spbstu.autoservice.model.deserialization.PersonnelTableEntityDeserializer;
+import ru.spbstu.autoservice.model.serialization.PersonnelTableEntitySerializer;
 
 import javax.persistence.*;
 import java.util.HashSet;

@@ -1,7 +1,7 @@
 package ru.spbstu.autoservice.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ru.spbstu.autoservice.deserialization.AutomobileEntityDeserializer;
+import ru.spbstu.autoservice.model.deserialization.AutomobileEntityDeserializer;
 
 @JsonDeserialize(using = AutomobileEntityDeserializer.class)
 public class AutomobileEntity {

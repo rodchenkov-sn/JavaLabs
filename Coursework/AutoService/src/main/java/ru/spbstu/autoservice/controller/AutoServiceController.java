@@ -1,5 +1,6 @@
 package ru.spbstu.autoservice.controller;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.spbstu.autoservice.model.*;
 import ru.spbstu.autoservice.service.AutomobileDataBaseService;
@@ -45,23 +46,23 @@ public class AutoServiceController {
     //  get by id
     //
 
-    @GetMapping("/automobiles/by_id")
-    public Optional<AutomobileTableEntity> automobilesById(@RequestParam(value = "id") int id) {
+    @GetMapping("/automobiles/{id}")
+    public Optional<AutomobileTableEntity> automobilesById(@PathVariable int id) {
         return automobileDataBaseService.getAutomobileById(id);
     }
 
-    @GetMapping("/personnel/by_id")
-    public Optional<PersonnelTableEntity> personnelById(@RequestParam(value = "id") int id) {
+    @GetMapping("/personnel/{id}}")
+    public Optional<PersonnelTableEntity> personnelById(@PathVariable int id) {
         return automobileDataBaseService.getPersonnelById(id);
     }
 
-    @GetMapping("/routes/by_id")
-    public Optional<RouteTableEntity> routesById(@RequestParam(value = "id") int id) {
+    @GetMapping("/routes/{id}")
+    public Optional<RouteTableEntity> routesById(@PathVariable int id) {
         return automobileDataBaseService.getRouteById(id);
     }
 
-    @GetMapping("/journal/by_id")
-    public Optional<JournalTableEntity> journalById(@RequestParam(value = "id") int id) {
+    @GetMapping("/journal/{id}")
+    public Optional<JournalTableEntity> journalById(@PathVariable int id) {
         return automobileDataBaseService.getJournalById(id);
     }
 
@@ -69,26 +70,51 @@ public class AutoServiceController {
     //  add
     //
 
-    @PostMapping("/automobiles/add")
+    @PostMapping("/automobiles")
     public String automobilesAdd(@RequestBody AutomobileEntity automobileEntity) {
         return automobileDataBaseService.addAutomobile(automobileEntity) ? "ok" : "error";
     }
 
-    @PostMapping("/personnel/add")
+    @PostMapping("/personnel")
     public String personnelAdd(@RequestBody PersonnelTableEntity personnelTableEntity) {
         automobileDataBaseService.addPersonnel(personnelTableEntity);
         return "ok";
     }
 
-    @PostMapping("/routes/add")
+    @PostMapping("/routes")
     public String routesAdd(@RequestBody RouteTableEntity routeTableEntity) {
         automobileDataBaseService.addRoute(routeTableEntity);
         return "ok";
     }
 
-    @PostMapping("/journal/add")
+    @PostMapping("/journal")
     public String journalAdd(@RequestBody JournalEntity journalEntity) {
         return automobileDataBaseService.addJournal(journalEntity) ? "ok" : "error";
+    }
+
+    //
+    //  delete by id
+    //
+
+    @DeleteMapping("/automobiles/{id}")
+    public String automobilesDelete(@PathVariable int id) {
+        return automobileDataBaseService.deleteAutomobileById(id) ? "ok" : "error";
+    }
+
+    @DeleteMapping("/personnel/{id}")
+    public String personnelDelete(@PathVariable int id) {
+        return automobileDataBaseService.deletePersonnelById(id) ? "ok" : "error";
+    }
+
+    @DeleteMapping("/routes/{id}")
+    public String routesDelete(@PathVariable int id) {
+        return automobileDataBaseService.deleteRouteById(id) ? "ok" : "error";
+    }
+
+    @DeleteMapping("/journal/{id}")
+    public String journalDelete(@PathVariable int id) {
+        automobileDataBaseService.deleteJournalById(id);
+        return "ok";
     }
 
 }

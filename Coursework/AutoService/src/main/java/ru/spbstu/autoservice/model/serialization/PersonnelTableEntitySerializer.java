@@ -1,13 +1,11 @@
-package ru.spbstu.autoservice.serialization;
+package ru.spbstu.autoservice.model.serialization;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import ru.spbstu.autoservice.model.PersonnelTableEntity;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class PersonnelTableEntitySerializer extends StdSerializer<PersonnelTableEntity> {
 

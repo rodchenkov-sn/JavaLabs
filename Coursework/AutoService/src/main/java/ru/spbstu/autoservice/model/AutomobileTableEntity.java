@@ -1,7 +1,7 @@
 package ru.spbstu.autoservice.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import ru.spbstu.autoservice.serialization.AutomobileTableEntitySerializer;
+import ru.spbstu.autoservice.model.serialization.AutomobileTableEntitySerializer;
 
 import javax.persistence.*;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package ru.spbstu.autoservice.deserialization;
+package ru.spbstu.autoservice.model.deserialization;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

@@ -1,9 +1,7 @@
 package ru.spbstu.autoservice.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import ru.spbstu.autoservice.deserialization.JournalEntityDeserializer;
-import ru.spbstu.autoservice.serialization.JournalTableEntitySerializer;
+import ru.spbstu.autoservice.model.serialization.JournalTableEntitySerializer;
 
 import javax.persistence.*;
 import java.sql.Timestamp;

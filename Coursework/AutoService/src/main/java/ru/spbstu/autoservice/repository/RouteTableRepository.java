@@ -1,4 +1,4 @@
-package ru.spbstu.autoservice.service;
+package ru.spbstu.autoservice.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import ru.spbstu.autoservice.model.RouteTableEntity;
