@@ -84,4 +84,11 @@ public class AutomobileTableEntity {
         this.driver = driver;
     }
 
+    public Set<JournalTableEntity> getJournalTableEntities() {
+        return journalTableEntities;
+    }
+
+    public void setJournalTableEntities(Set<JournalTableEntity> journalTableEntities) {
+        this.journalTableEntities = journalTableEntities;
+    }
 }

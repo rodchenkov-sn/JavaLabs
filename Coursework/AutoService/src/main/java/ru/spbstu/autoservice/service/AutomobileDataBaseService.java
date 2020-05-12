@@ -1,5 +1,6 @@
 package ru.spbstu.autoservice.service;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.spbstu.autoservice.model.*;
 import ru.spbstu.autoservice.repository.AutomobileTableRepository;
@@ -13,6 +14,8 @@ import java.util.Optional;
 
 @Service
 public class AutomobileDataBaseService {
+
+    private final int pageSize = 20;
 
     private final AutomobileTableRepository automobileTableRepository;
     private final JournalTableRepository journalTableRepository;
@@ -57,6 +60,10 @@ public class AutomobileDataBaseService {
         return false;
     }
 
+    public List<PersonnelTableEntity> getPersonnelPage(int page) {
+        return personnelTableRepository.findAll(PageRequest.of(page, pageSize)).toList();
+    }
+
     //
     //  automobiles
     //
@@ -93,6 +100,10 @@ public class AutomobileDataBaseService {
         return false;
     }
 
+    public List<AutomobileTableEntity> getAutomobilePage(int page) {
+        return automobileTableRepository.findAll(PageRequest.of(page, pageSize)).toList();
+    }
+
     //
     //  routes
     //
@@ -117,6 +128,10 @@ public class AutomobileDataBaseService {
             return true;
         }
         return false;
+    }
+
+    public List<RouteTableEntity> getRoutesPage(int page) {
+        return routeTableRepository.findAll(PageRequest.of(page, pageSize)).toList();
     }
 
     //
@@ -152,6 +167,10 @@ public class AutomobileDataBaseService {
 
     public void deleteJournalById(int id) {
         journalTableRepository.deleteById(id);
+    }
+
+    public List<JournalTableEntity> getJournalPage(int page) {
+        return journalTableRepository.findAll(PageRequest.of(page, pageSize)).toList();
     }
 
 }

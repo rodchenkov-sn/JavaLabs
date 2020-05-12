@@ -51,7 +51,7 @@ public class AutoServiceController {
         return automobileDataBaseService.getAutomobileById(id);
     }
 
-    @GetMapping("/personnel/{id}}")
+    @GetMapping("/personnel/{id}")
     public Optional<PersonnelTableEntity> personnelById(@PathVariable int id) {
         return automobileDataBaseService.getPersonnelById(id);
     }
@@ -115,6 +115,30 @@ public class AutoServiceController {
     public String journalDelete(@PathVariable int id) {
         automobileDataBaseService.deleteJournalById(id);
         return "ok";
+    }
+
+    //
+    //  get page
+    //
+
+    @GetMapping("/automobiles/page/{page}")
+    public List<AutomobileTableEntity> automobilePage(@PathVariable int page) {
+        return automobileDataBaseService.getAutomobilePage(page);
+    }
+
+    @GetMapping("/personnel/page/{page}")
+    public List<PersonnelTableEntity> personnelPage(@PathVariable int page) {
+        return automobileDataBaseService.getPersonnelPage(page);
+    }
+
+    @GetMapping("/routes/page/{page}")
+    public List<RouteTableEntity> routesPage(@PathVariable int page) {
+        return automobileDataBaseService.getRoutesPage(page);
+    }
+
+    @GetMapping("/journal/page/{page}")
+    public List<JournalTableEntity> journalPage(@PathVariable int page) {
+        return automobileDataBaseService.getJournalPage(page);
     }
 
 }

@@ -29,6 +29,16 @@ public class AutomobileTableEntitySerializer extends StdSerializer<AutomobileTab
         jsonGenerator.writeStringField("color", automobileTableEntity.getColor());
         jsonGenerator.writeStringField("mark", automobileTableEntity.getMark());
         jsonGenerator.writeNumberField("driver_id", automobileTableEntity.getDriver().getId());
+        jsonGenerator.writeFieldName("journal_record_ids");
+        jsonGenerator.writeStartArray();
+        automobileTableEntity.getJournalTableEntities().forEach(a -> {
+            try {
+                jsonGenerator.writeNumber(a.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        jsonGenerator.writeEndArray();
         jsonGenerator.writeEndObject();
     }
 
