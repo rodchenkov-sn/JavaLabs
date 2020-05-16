@@ -123,6 +123,14 @@ class _HomePageStage extends State<HomePage> {
           }).toList()
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        onPressed: () {},
+      ),
     );
   }
 
@@ -168,7 +176,19 @@ class _HomePageStage extends State<HomePage> {
         details: (r) => DetailsScreen(
           title: route.name,
           header: r,
-          onSelect: (_) {},
+          onSelect: (String action) {
+            switch (action) {
+              case 'delete':
+                if (route.journalRecords.isNotEmpty) {
+                  _showDependenciesError();
+                } else {
+                  _delete('routes/${route.id}');
+                }
+                break;
+              default:
+                print('WIP');
+            }
+          },
           dataProvider: _getJournalCards(route.journalRecords),
         ),
       )
@@ -202,6 +222,20 @@ class _HomePageStage extends State<HomePage> {
                     route: snapshot.data.route,
                     automobile: snapshot.data.automobile,
                     driver: snapshot.data.driver,
+                    details: (header) => DetailsScreen(
+                      title: 'Journal record',
+                      header: header,
+                      onSelect: (String action) {
+                        switch (action) {
+                          case 'delete':
+                            _delete('journal/${journal.id}');
+                            break;
+                          default:
+                            print('WIP');
+                        }
+                      },
+                      dataProvider: Stream<List<Widget>>.empty(),
+                    ),
                   );
             }
           },
@@ -219,15 +253,25 @@ class _HomePageStage extends State<HomePage> {
         details: (d) => DetailsScreen(
           title: '${driver.firstName} ${driver.lastName}',
           header: d,
-          onSelect: (s) {},
+          onSelect: (String action) {
+            switch (action) {
+              case 'delete':
+                if (driver.automobiles.isNotEmpty) {
+                  _showDependenciesError();
+                } else {
+                  _delete('personnel/${driver.id}');
+                }
+                break;
+              default:
+                print('WIP');
+            }
+          },
           dataProvider: widget.service.getAutomobilesByIds(
               widget.user, 
               driver.automobiles
-          ).map((Automobile a) => AutomobileCell(
-            automobile: a,
-            driver: driver,
-            details: (_) { return null; },
-          ))
+          ).map((List<Automobile> as) =>
+              as.map((a) =>
+                  _makeAutomobileCell(a, driver)).toList())
         ),
       )
     );
@@ -247,16 +291,7 @@ class _HomePageStage extends State<HomePage> {
                 if (snapshot.hasError)
                   return ErrorCell('Error: ${snapshot.error}');
                 else
-                  return AutomobileCell(
-                    automobile: automobile,
-                    driver: snapshot.data,
-                    details: (header) => DetailsScreen(
-                      title: '${automobile.color} ${automobile.mark}',
-                      header: header,
-                      onSelect: (s) { print(s); },
-                      dataProvider: _getJournalCards(automobile.journalRecords),
-                    )
-                  );
+                  return _makeAutomobileCell(automobile, snapshot.data);
             }
           },
         );
@@ -284,19 +319,113 @@ class _HomePageStage extends State<HomePage> {
     );
   }
   
-  Stream<Widget> _getJournalCards(List<int> jIds) async* {
+  Stream<List<Widget>> _getJournalCards(List<int> jIds) async* {
+    var widgets = <Widget>[];
     for (final jId in jIds) {
       final j = await widget.service.getJournalById(widget.user, jId);
       final r = await widget.service.getRouteById(widget.user, j.routeId);
       final a = await widget.service.getAutomobileById(widget.user, j.automobileId);
       final d = await widget.service.getDriverById(widget.user, a.driverId);
-      yield JournalCell(
+      widgets.add(JournalCell(
         journalRecord: j,
         automobile: a,
         route: r,
         driver: d,
-      );
+        details: (journal) => DetailsScreen(
+          title: 'Journal record',
+          header: journal,
+          onSelect: (String action) {
+            switch (action) {
+              case 'delete':
+                _delete('journal/${j.id}');
+                break;
+              default:
+                print('WIP');
+            }
+          },
+          dataProvider: Stream<List<Widget>>.empty(),
+        ),
+      ));
+      yield widgets;
     }
   }
-  
+
+  Widget _makeAutomobileCell(Automobile automobile, Driver driver) {
+    return AutomobileCell(
+        automobile: automobile,
+        driver: driver,
+        details: (header) => DetailsScreen(
+          title: '${automobile.color} ${automobile.mark}',
+          header: header,
+          onSelect: (String action) {
+            switch (action) {
+              case 'delete':
+                if (automobile.journalRecords.isNotEmpty) {
+                  _showDependenciesError();
+                } else {
+                  _delete('automobiles/${automobile.id}');
+                }
+                break;
+              default:
+                print('WIP');
+            }
+          },
+          dataProvider: _getJournalCards(automobile.journalRecords),
+        )
+    );
+  }
+
+  void _somethingWentWrong() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text('Something went wrong'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Bruh'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  void _showDependenciesError() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text('Could not delete item'),
+          content: Text('There are several item that depends on this one. '
+              'Try removing them first.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  void _delete(String url) {
+    widget.service.delete(widget.user, url).then((success) {
+      if (success) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        widget.service.refresh(widget.user).then((value) {
+          setState(() {});
+        });
+      } else {
+        _somethingWentWrong();
+      }
+    });
+  }
+
 }

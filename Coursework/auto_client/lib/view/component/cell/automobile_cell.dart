@@ -17,13 +17,11 @@ class AutomobileCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (details(this) != null) {
-          Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => details(this),
-              )
-          );
-        }
+        Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => details(this),
+            )
+        );
       },
       child: Card(
         elevation: 10,

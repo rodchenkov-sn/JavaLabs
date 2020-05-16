@@ -25,12 +25,13 @@ abstract class BaseService {
   Future<Driver>        getDriverById(User requester, int id);
   Future<Route>         getRouteById(User requester, int id);
 
-  Stream<JournalRecord> getJournalByIds(User requester, List<int> ids);
-  Stream<Automobile>    getAutomobilesByIds(User requester, List<int> ids);
-  Stream<Driver>        getDriversById(User requester, List<int> ids);
-  Stream<Route>         getRoutesById(User requester, List<int> ids);
+  Stream<List<JournalRecord>> getJournalByIds(User requester, List<int> ids);
+  Stream<List<Automobile>>    getAutomobilesByIds(User requester, List<int> ids);
+  Stream<List<Driver>>        getDriversById(User requester, List<int> ids);
+  Stream<List<Route>>         getRoutesById(User requester, List<int> ids);
 
-  Future<void>          refresh(User requester);
+  Future<void> refresh(User requester);
+  Future<bool> delete(User requester, String url);
 
 }
 
@@ -113,30 +114,38 @@ class AutoService implements BaseService {
   }
 
   @override
-  Stream<Route> getRoutesById(User requester, List<int> ids) async* {
+  Stream<List<Route>> getRoutesById(User requester, List<int> ids) async* {
+    var routes = <Route>[];
     for (final id in ids) {
-      yield await getRouteById(requester, id);
+      routes.add(await getRouteById(requester, id));
+      yield routes;
     }
   }
 
   @override
-  Stream<Driver> getDriversById(User requester, List<int> ids) async* {
+  Stream<List<Driver>> getDriversById(User requester, List<int> ids) async* {
+    var drivers = <Driver>[];
     for (final id in ids) {
-      yield await getDriverById(requester, id);
+      drivers.add(await getDriverById(requester, id));
+      yield drivers;
     }
   }
 
   @override
-  Stream<Automobile> getAutomobilesByIds(User requester, List<int> ids) async* {
+  Stream<List<Automobile>> getAutomobilesByIds(User requester, List<int> ids) async* {
+    var automobiles = <Automobile>[];
     for (final id in ids) {
-      yield await getAutomobileById(requester, id);
+      automobiles.add(await getAutomobileById(requester, id));
+      yield automobiles;
     }
   }
 
   @override
-  Stream<JournalRecord> getJournalByIds(User requester, List<int> ids) async* {
+  Stream<List<JournalRecord>> getJournalByIds(User requester, List<int> ids) async* {
+    var journal = <JournalRecord>[];
     for (final id in ids) {
-      yield await getJournalById(requester, id);
+      journal.add(await getJournalById(requester, id));
+      yield journal;
     }
   }
 
@@ -187,6 +196,14 @@ class AutoService implements BaseService {
     await loadMoreAutomobiles(requester);
     await loadMoreRoutes(requester);
     await loadMorePersonnel(requester);
+  }
+
+  @override
+  Future<bool> delete(User requester, String url) async {
+    final header = { 'Authorization': 'Bearer_${requester.token}' };
+    final response = (await http.delete('$baseUrl/$url', headers: header)).body;
+    print(response);
+    return response == 'ok';
   }
 
 }

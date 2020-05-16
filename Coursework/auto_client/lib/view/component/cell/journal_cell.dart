@@ -10,67 +10,78 @@ class JournalCell extends StatelessWidget {
   final r.Route route;
   final Automobile automobile;
   final Driver driver;
+  final Widget Function(Widget) details;
 
   JournalCell({
     this.journalRecord,
     this.route,
     this.automobile,
-    this.driver
+    this.driver,
+    this.details
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
-      margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            leading: Icon(
-              Icons.access_time,
-              color: Colors.blueGrey,
-            ),
-            title: Text(
-              '${journalRecord.timeIn.day}.${journalRecord.timeIn.month}'
-                  + ' ${journalRecord.timeIn.hour}'
-                  + ':${journalRecord.timeIn.minute}'
-            ),
-            subtitle: Text(
-                '${journalRecord.timeOut.day}.${journalRecord.timeOut.month}'
-                    + ' ${journalRecord.timeOut.hour}'
-                    + ':${journalRecord.timeOut.minute}'
-            ),
-          ),
-          Divider(
-            color: Colors.blueGrey,
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.map,
-              color: Colors.blueGrey,
-            ),
-            title: Text(route.name),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.drive_eta,
-              color: Colors.blueGrey,
-            ),
-            title: Text('${automobile.color} ${automobile.mark}'),
-            subtitle: Text(automobile.num),
-          ),
-          ListTile(
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => details(this),
+            )
+        );
+      },
+      child: Card(
+        elevation: 10,
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Column(
+          children: <Widget>[
+            ListTile(
               leading: Icon(
-                Icons.account_box,
-                color: Colors.blueGrey
+                Icons.access_time,
+                color: Colors.blueGrey,
               ),
               title: Text(
-                '${driver.firstName} ${driver.lastName} ${
-                    driver.fatherName == null ? '' : driver.fatherName
-                }'
-              )
-          ),
-        ],
+                '${journalRecord.timeIn.day}.${journalRecord.timeIn.month}'
+                    + ' ${journalRecord.timeIn.hour}'
+                    + ':${journalRecord.timeIn.minute}'
+              ),
+              subtitle: Text(
+                  '${journalRecord.timeOut.day}.${journalRecord.timeOut.month}'
+                      + ' ${journalRecord.timeOut.hour}'
+                      + ':${journalRecord.timeOut.minute}'
+              ),
+            ),
+            Divider(
+              color: Colors.blueGrey,
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.map,
+                color: Colors.blueGrey,
+              ),
+              title: Text(route.name),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.drive_eta,
+                color: Colors.blueGrey,
+              ),
+              title: Text('${automobile.color} ${automobile.mark}'),
+              subtitle: Text(automobile.num),
+            ),
+            ListTile(
+                leading: Icon(
+                  Icons.account_box,
+                  color: Colors.blueGrey
+                ),
+                title: Text(
+                  '${driver.firstName} ${driver.lastName} ${
+                      driver.fatherName == null ? '' : driver.fatherName
+                  }'
+                )
+            ),
+          ],
+        ),
       ),
     );
   }

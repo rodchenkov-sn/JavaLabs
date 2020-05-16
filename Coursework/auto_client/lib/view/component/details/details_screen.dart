@@ -1,4 +1,5 @@
-import 'package:autoclient/view/component/cell/loading_cell.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -6,8 +7,7 @@ class DetailsScreen extends StatefulWidget {
   final String title;
   final Widget header;
   final void Function(String) onSelect;
-  final Stream<Widget> dataProvider;
-
+  final Stream<List<Widget>> dataProvider;
 
   DetailsScreen({this.title, this.header, this.onSelect, this.dataProvider});
 
@@ -17,18 +17,6 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-
-  var _items = <Widget>[];
-
-  @override
-  void initState() {
-    widget.dataProvider.forEach((element) {
-      setState(() {
-        _items.add(element);
-      });
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +36,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ),
           ],
         ),
-        body: _items.isEmpty ? Center(child: CircularProgressIndicator()) :
-            ListView(
-              children: _items,
-            )
+        body: StreamBuilder(
+          stream: widget.dataProvider,
+          builder: (context, snapshot) {
+            final content = <Widget>[widget.header];
+            if (snapshot != null && snapshot.hasData) {
+              content.addAll(snapshot.data);
+            }
+            return ListView(
+              children: content,
+            );
+          },
+        )
     );
   }
 }

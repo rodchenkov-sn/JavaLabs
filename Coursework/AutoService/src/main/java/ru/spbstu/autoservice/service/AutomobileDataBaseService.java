@@ -123,7 +123,7 @@ public class AutomobileDataBaseService {
     }
 
     public boolean deleteRouteById(int id) {
-        if (journalTableRepository.findAllByAutomobile_Id(id).isEmpty()) {
+        if (journalTableRepository.findAllByRoute_Id(id).isEmpty()) {
             routeTableRepository.deleteById(id);
             return true;
         }
