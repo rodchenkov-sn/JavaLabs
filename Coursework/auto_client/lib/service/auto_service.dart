@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:autoclient/model/automobile.dart';
 import 'package:autoclient/model/driver.dart';
+import 'package:autoclient/model/journal_data.dart';
 import 'package:autoclient/model/journal_record.dart';
 import 'package:autoclient/model/route.dart';
 import 'package:autoclient/model/user.dart';
@@ -24,6 +25,7 @@ abstract class BaseService {
   Future<Automobile>    getAutomobileById(User requester, int id);
   Future<Driver>        getDriverById(User requester, int id);
   Future<Route>         getRouteById(User requester, int id);
+  Future<JournalData>   getJournalData(User requester, JournalRecord jr);
 
   Stream<List<JournalRecord>> getJournalByIds(User requester, List<int> ids);
   Stream<List<Automobile>>    getAutomobilesByIds(User requester, List<int> ids);
@@ -204,6 +206,15 @@ class AutoService implements BaseService {
     final response = (await http.delete('$baseUrl/$url', headers: header)).body;
     print(response);
     return response == 'ok';
+  }
+
+  @override
+  Future<JournalData> getJournalData(User requester, JournalRecord jr) async {
+    var jd = JournalData();
+    jd.automobile = await getAutomobileById(requester, jr.automobileId);
+    jd.driver = await getDriverById(requester, jd.automobile.id);
+    jd.route = await getRouteById(requester, jr.routeId);
+    return jd;
   }
 
 }

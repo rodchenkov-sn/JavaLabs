@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   void validateAndSubmit() async {
     if (validateAndSave()) {
       setState(() {
-        _errorMessage = "";
+        _errorMessage = '';
         _isLoading = true;
       });
       User user;
@@ -121,10 +121,11 @@ class _LoginPageState extends State<LoginPage> {
       return new Text(
         _errorMessage,
         style: TextStyle(
-            fontSize: 13.0,
-            color: Colors.red,
-            height: 1.0,
-            fontWeight: FontWeight.w300),
+          fontSize: 13.0,
+          color: Colors.red,
+          height: 1.0,
+          fontWeight: FontWeight.w300
+        ),
       );
     } else {
       return new Container(
@@ -141,11 +142,12 @@ class _LoginPageState extends State<LoginPage> {
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: 'Username',
-            icon: new Icon(
-              Icons.account_circle,
-              color: Colors.grey,
-            )),
+          hintText: 'Username',
+          icon: new Icon(
+            Icons.account_box,
+            color: Colors.blueGrey,
+          )
+        ),
         validator: (value) => value.isEmpty ? 'Username can\'t be empty' : null,
         onSaved: (value) => _email = value.trim(),
       ),
@@ -160,11 +162,11 @@ class _LoginPageState extends State<LoginPage> {
         obscureText: true,
         autofocus: false,
         decoration: new InputDecoration(
-            hintText: 'Password',
-            icon: new Icon(
-              Icons.lock,
-              color: Colors.grey,
-            )
+          hintText: 'Password',
+          icon: new Icon(
+            Icons.lock,
+            color: Colors.blueGrey,
+          )
         ),
         validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
         onSaved: (value) => _password = value.trim(),

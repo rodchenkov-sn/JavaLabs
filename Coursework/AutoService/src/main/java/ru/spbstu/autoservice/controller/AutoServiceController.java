@@ -1,12 +1,12 @@
 package ru.spbstu.autoservice.controller;
 
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.spbstu.autoservice.model.*;
 import ru.spbstu.autoservice.service.AutomobileDataBaseService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping("/autoservice")
 @RestController
@@ -23,23 +23,23 @@ public class AutoServiceController {
     //
 
     @GetMapping("/automobiles/all")
-    public List<AutomobileTableEntity> automobilesAll() {
-        return automobileDataBaseService.getAllAutomobiles();
+    public ResponseEntity<List<AutomobileTableEntity>> automobilesAll() {
+        return ResponseEntity.ok(automobileDataBaseService.getAllAutomobiles());
     }
 
     @GetMapping("/personnel/all")
-    public List<PersonnelTableEntity> personnelAll() {
-        return automobileDataBaseService.getAllPersonnel();
+    public ResponseEntity<List<PersonnelTableEntity>> personnelAll() {
+        return ResponseEntity.ok(automobileDataBaseService.getAllPersonnel());
     }
 
     @GetMapping("/routes/all")
-    public List<RouteTableEntity> routesAll() {
-        return automobileDataBaseService.getAllRoutes();
+    public ResponseEntity<List<RouteTableEntity>> routesAll() {
+        return ResponseEntity.ok(automobileDataBaseService.getAllRoutes());
     }
 
     @GetMapping("/journal/all")
-    public List<JournalTableEntity> journalAll() {
-        return automobileDataBaseService.getAllJournal();
+    public ResponseEntity<List<JournalTableEntity>> journalAll() {
+        return ResponseEntity.ok(automobileDataBaseService.getAllJournal());
     }
 
     //
@@ -47,23 +47,35 @@ public class AutoServiceController {
     //
 
     @GetMapping("/automobiles/{id}")
-    public Optional<AutomobileTableEntity> automobilesById(@PathVariable int id) {
-        return automobileDataBaseService.getAutomobileById(id);
+    public ResponseEntity<AutomobileTableEntity> automobilesById(@PathVariable int id) {
+        return automobileDataBaseService
+                .getAutomobileById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/personnel/{id}")
-    public Optional<PersonnelTableEntity> personnelById(@PathVariable int id) {
-        return automobileDataBaseService.getPersonnelById(id);
+    public ResponseEntity<PersonnelTableEntity> personnelById(@PathVariable int id) {
+        return automobileDataBaseService
+                .getPersonnelById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/routes/{id}")
-    public Optional<RouteTableEntity> routesById(@PathVariable int id) {
-        return automobileDataBaseService.getRouteById(id);
+    public ResponseEntity<RouteTableEntity> routesById(@PathVariable int id) {
+        return automobileDataBaseService
+                .getRouteById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/journal/{id}")
-    public Optional<JournalTableEntity> journalById(@PathVariable int id) {
-        return automobileDataBaseService.getJournalById(id);
+    public ResponseEntity<JournalTableEntity> journalById(@PathVariable int id) {
+        return automobileDataBaseService
+                .getJournalById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     //
@@ -71,25 +83,29 @@ public class AutoServiceController {
     //
 
     @PostMapping("/automobiles")
-    public String automobilesAdd(@RequestBody AutomobileEntity automobileEntity) {
-        return automobileDataBaseService.addAutomobile(automobileEntity) ? "ok" : "error";
+    public ResponseEntity<Void> automobilesAdd(@RequestBody AutomobileEntity automobileEntity) {
+        return automobileDataBaseService.addAutomobile(automobileEntity)
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     @PostMapping("/personnel")
-    public String personnelAdd(@RequestBody PersonnelTableEntity personnelTableEntity) {
+    public ResponseEntity<Void> personnelAdd(@RequestBody PersonnelTableEntity personnelTableEntity) {
         automobileDataBaseService.addPersonnel(personnelTableEntity);
-        return "ok";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/routes")
-    public String routesAdd(@RequestBody RouteTableEntity routeTableEntity) {
+    public ResponseEntity<Void> routesAdd(@RequestBody RouteTableEntity routeTableEntity) {
         automobileDataBaseService.addRoute(routeTableEntity);
-        return "ok";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/journal")
-    public String journalAdd(@RequestBody JournalEntity journalEntity) {
-        return automobileDataBaseService.addJournal(journalEntity) ? "ok" : "error";
+    public ResponseEntity<Void> journalAdd(@RequestBody JournalEntity journalEntity) {
+        return automobileDataBaseService.addJournal(journalEntity)
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     //
@@ -97,24 +113,30 @@ public class AutoServiceController {
     //
 
     @DeleteMapping("/automobiles/{id}")
-    public String automobilesDelete(@PathVariable int id) {
-        return automobileDataBaseService.deleteAutomobileById(id) ? "ok" : "error";
+    public ResponseEntity<Void> automobilesDelete(@PathVariable int id) {
+        return automobileDataBaseService.deleteAutomobileById(id)
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     @DeleteMapping("/personnel/{id}")
-    public String personnelDelete(@PathVariable int id) {
-        return automobileDataBaseService.deletePersonnelById(id) ? "ok" : "error";
+    public ResponseEntity<Void> personnelDelete(@PathVariable int id) {
+        return automobileDataBaseService.deletePersonnelById(id)
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     @DeleteMapping("/routes/{id}")
-    public String routesDelete(@PathVariable int id) {
-        return automobileDataBaseService.deleteRouteById(id) ? "ok" : "error";
+    public ResponseEntity<Void> routesDelete(@PathVariable int id) {
+        return automobileDataBaseService.deleteRouteById(id)
+                ? new ResponseEntity<>(HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
     @DeleteMapping("/journal/{id}")
-    public String journalDelete(@PathVariable int id) {
+    public ResponseEntity<Void> journalDelete(@PathVariable int id) {
         automobileDataBaseService.deleteJournalById(id);
-        return "ok";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //
@@ -122,23 +144,23 @@ public class AutoServiceController {
     //
 
     @GetMapping("/automobiles/page/{page}")
-    public List<AutomobileTableEntity> automobilePage(@PathVariable int page) {
-        return automobileDataBaseService.getAutomobilePage(page);
+    public ResponseEntity<List<AutomobileTableEntity>> automobilePage(@PathVariable int page) {
+        return ResponseEntity.ok(automobileDataBaseService.getAutomobilePage(page));
     }
 
     @GetMapping("/personnel/page/{page}")
-    public List<PersonnelTableEntity> personnelPage(@PathVariable int page) {
-        return automobileDataBaseService.getPersonnelPage(page);
+    public ResponseEntity<List<PersonnelTableEntity>> personnelPage(@PathVariable int page) {
+        return ResponseEntity.ok(automobileDataBaseService.getPersonnelPage(page));
     }
 
     @GetMapping("/routes/page/{page}")
-    public List<RouteTableEntity> routesPage(@PathVariable int page) {
-        return automobileDataBaseService.getRoutesPage(page);
+    public ResponseEntity<List<RouteTableEntity>> routesPage(@PathVariable int page) {
+        return ResponseEntity.ok(automobileDataBaseService.getRoutesPage(page));
     }
 
     @GetMapping("/journal/page/{page}")
-    public List<JournalTableEntity> journalPage(@PathVariable int page) {
-        return automobileDataBaseService.getJournalPage(page);
+    public ResponseEntity<List<JournalTableEntity>> journalPage(@PathVariable int page) {
+        return ResponseEntity.ok(automobileDataBaseService.getJournalPage(page));
     }
 
 }
