@@ -1,6 +1,7 @@
+import 'package:autoclient/model/deletable.dart';
 import 'package:autoclient/model/postable.dart';
 
-class Route implements Postable {
+class Route implements Postable, Deleteble {
 
   final int id;
   final String name;
@@ -15,11 +16,14 @@ class Route implements Postable {
   );
 
   @override
-  String postUrl() => 'routes';
+  String get postUrl => 'routes';
 
   @override
   Map<String, dynamic> serialize() => {
     'name': name
   };
+
+  @override
+  String get deleteUrl => 'routes/$id';
 
 }

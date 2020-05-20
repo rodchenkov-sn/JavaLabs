@@ -1,3 +1,6 @@
+import 'package:autoclient/model/deletable.dart';
+import 'package:autoclient/model/postable.dart';
+import 'package:autoclient/view/component/screen/driver_input.dart';
 import 'package:autoclient/view/component/screen/route_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -111,38 +114,41 @@ class _HomePageStage extends State<HomePage> {
     );
   }
 
-
-
   void _onPressedAdd() {
     switch (_currStage) {
-      case HomePageStage.JOURNAL:
-        // TODO: Handle this case.
-        break;
       case HomePageStage.ROUTES:
         Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => RouteInput(
                 onCancel: () { Navigator.of(context).pop(); },
-                onSubmit: (r.Route newRoute) {
-                  widget.service.postNew(widget.user, newRoute).then((success) {
-                    Navigator.of(context).pop();
-                    if (!success) {
-                      somethingWentWrong(context);
-                    }
-                  });
-                },
+                onSubmit: _postNew
               ),
             )
         );
         break;
-      case HomePageStage.AUTOMOBILES:
-        // TODO: Handle this case.
-        break;
       case HomePageStage.PERSONNEL:
-        // TODO: Handle this case.
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => DriverInput(
+              onCancel: () { Navigator.of(context).pop(); },
+              onSubmit: _postNew
+            )
+          )
+        );
         break;
       default:
     }
+  }
+
+  void _postNew(Postable postable) {
+    widget.service.postNew(widget.user, postable).then((success) {
+      if (!success) {
+        somethingWentWrong(context);
+      } else {
+        Navigator.of(context).pop();
+        _refresh();
+      }
+    });
   }
 
   Widget _makeAppBar(HomePageStage stage) => AppBar(
@@ -152,14 +158,16 @@ class _HomePageStage extends State<HomePage> {
     actions: <Widget>[
       IconButton(
         icon: Icon(Icons.refresh),
-        onPressed: () {
-          widget.service.refresh(widget.user).then((value) {
-            setState(() {});
-          });
-        },
+        onPressed: _refresh
       )
     ],
   );
+
+  void _refresh() {
+    widget.service.refresh(widget.user).then((value) {
+      setState(() {});
+    });
+  }
 
   Widget _makeBody(HomePageStage stage) {
     switch (stage) {
@@ -184,11 +192,7 @@ class _HomePageStage extends State<HomePage> {
       details: (r) => DetailsScreen(
         title: route.name,
         header: r,
-        onSelect: (String action) => _selectionHandler(
-          action,
-          route.journalRecords.isEmpty,
-          'routes/${route.id}'
-        ),
+        onSelect: (_) => _delete(route.journalRecords.isEmpty, route),
         dataProvider: _getJournalCards(route.journalRecords),
       ),
     )
@@ -215,11 +219,7 @@ class _HomePageStage extends State<HomePage> {
                   details: (header) => DetailsScreen(
                     title: 'Journal record',
                     header: header,
-                    onSelect: (String action) => _selectionHandler(
-                      action,
-                      true,
-                      'journal/${journal.id}'
-                    ),
+                    onSelect: (_) => _delete(true, journal),
                     dataProvider: Stream<List<Widget>>.empty(),
                   ),
                 );
@@ -237,11 +237,7 @@ class _HomePageStage extends State<HomePage> {
       details: (d) => DetailsScreen(
         title: '${driver.firstName} ${driver.lastName}',
         header: d,
-        onSelect: (String action) => _selectionHandler(
-          action,
-          driver.automobiles.isEmpty,
-          'personnel/${driver.id}'
-        ),
+        onSelect: (_) => _delete(driver.automobiles.isEmpty, driver),
         dataProvider: widget.service.getAutomobilesByIds(
           widget.user,
           driver.automobiles
@@ -305,11 +301,7 @@ class _HomePageStage extends State<HomePage> {
         details: (journal) => DetailsScreen(
           title: 'Journal record',
           header: journal,
-          onSelect: (String action) => _selectionHandler(
-            action,
-            true,
-            'journal/${j.id}'
-          ),
+          onSelect: (_) => _delete(true, j),
           dataProvider: Stream<List<Widget>>.empty(),
         ),
       ));
@@ -326,39 +318,25 @@ class _HomePageStage extends State<HomePage> {
     details: (header) => DetailsScreen(
       title: '${automobile.color} ${automobile.mark}',
       header: header,
-      onSelect: (String action) => _selectionHandler(
-        action,
-        automobile.journalRecords.isEmpty,
-        'automobiles/${automobile.id}'
-      ),
+      onSelect: (_) => _delete(automobile.journalRecords.isEmpty, automobile),
       dataProvider: _getJournalCards(automobile.journalRecords),
     )
   );
 
-  void _delete(String url) {
-    widget.service.delete(widget.user, url).then((success) {
-      if (success) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        widget.service.refresh(widget.user).then((value) {
-          setState(() {});
-        });
-      } else {
-        somethingWentWrong(context);
-      }
-    });
-  }
-
-  void _selectionHandler(String action, bool canBeDeleted, String deletionUrl) {
-    switch (action) {
-      case 'delete':
-        if (canBeDeleted) {
-          _delete(deletionUrl);
+  void _delete(bool canBeDeleted, Deleteble item) {
+    if (canBeDeleted) {
+      widget.service.delete(widget.user, item).then((success) {
+        if (success) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          widget.service.refresh(widget.user).then((value) {
+            setState(() {});
+          });
         } else {
-          showDependenciesError(context);
+          somethingWentWrong(context);
         }
-        break;
-      default:
-        somethingWentWrong(context);
+      });
+    } else {
+      showDependenciesError(context);
     }
   }
 

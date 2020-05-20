@@ -24,10 +24,10 @@ class _DriverInputState extends State<DriverInput> {
   String _fatherName = '';
 
   String _validateName(String name) {
-    if (name.isEmpty) {
+    if (name.trim().isEmpty) {
       return 'Must be not empty';
     }
-    if (name.contains(RegExp(r'\W'))) {
+    if (name.trim().contains(RegExp(r'\W'))) {
       return 'Alphabetic only';
     }
     return null;
@@ -61,7 +61,7 @@ class _DriverInputState extends State<DriverInput> {
                     labelText: 'First name',
                   ),
                   onSaved: (String value) {
-                    _firstName = value;
+                    _firstName = value.trim();
                   },
                   validator: _validateName
                 ),
@@ -73,7 +73,7 @@ class _DriverInputState extends State<DriverInput> {
                       labelText: 'Last name',
                     ),
                     onSaved: (String value) {
-                      _lastName = value;
+                      _lastName = value.trim();
                     },
                     validator: _validateName
                 ),
@@ -85,9 +85,9 @@ class _DriverInputState extends State<DriverInput> {
                       labelText: 'Father name',
                     ),
                     onSaved: (String value) {
-                      _fatherName = value;
+                      _fatherName = value.trim();
                     },
-                    validator: (value) => value.contains(RegExp(r'\W'))
+                    validator: (value) => value.trim().contains(RegExp(r'\W'))
                         ? 'Alphabetic only'
                         : null
                 ),

@@ -29,7 +29,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
               child: Icon(Icons.more_vert),
               itemBuilder: (context) {
                 return <PopupMenuItem<String>>[
-                  PopupMenuItem(child: Text('Edit'), value: 'edit'),
                   PopupMenuItem(child: Text('Delete'), value: 'delete'),
                 ];
               },

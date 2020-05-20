@@ -49,10 +49,10 @@ class _RouteInputState extends State<RouteInput> {
                     labelText: 'Name',
                   ),
                   onSaved: (String value) {
-                    _routeName = value;
+                    _routeName = value.trim();
                   },
                   validator: (String value) {
-                    return value.isEmpty ? 'Name must be not empty' : null;
+                    return value.trim().isEmpty ? 'Name must be not empty' : null;
                   },
                 ),
               ),

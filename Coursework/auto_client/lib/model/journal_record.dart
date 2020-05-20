@@ -1,6 +1,7 @@
+import 'package:autoclient/model/deletable.dart';
 import 'package:autoclient/model/postable.dart';
 
-class JournalRecord implements Postable {
+class JournalRecord implements Postable, Deleteble {
 
   final int id;
   final DateTime timeIn;
@@ -19,7 +20,7 @@ class JournalRecord implements Postable {
   );
 
   @override
-  String postUrl() => 'journal';
+  String get postUrl => 'journal';
 
   @override
   Map<String, dynamic> serialize() => {
@@ -28,5 +29,8 @@ class JournalRecord implements Postable {
     'automobile_id': automobileId,
     'route_id': routeId
   };
+
+  @override
+  String get deleteUrl => 'journal/$id';
 
 }

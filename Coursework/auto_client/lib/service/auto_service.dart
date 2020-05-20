@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:autoclient/model/automobile.dart';
+import 'package:autoclient/model/deletable.dart';
 import 'package:autoclient/model/driver.dart';
 import 'package:autoclient/model/journal_data.dart';
 import 'package:autoclient/model/journal_record.dart';
@@ -34,8 +35,8 @@ abstract class BaseService {
   Stream<List<Route>>         getRoutesById(User requester, List<int> ids);
 
   Future<void> refresh(User requester);
-  Future<bool> delete(User requester, String url);
-  
+
+  Future<bool> delete(User requester, Deleteble deleteble);
   Future<bool> postNew(User poster, Postable postable);
 
 }
@@ -204,9 +205,12 @@ class AutoService implements BaseService {
   }
 
   @override
-  Future<bool> delete(User requester, String url) async {
+  Future<bool> delete(User requester, Deleteble deleteble) async {
     final header = { 'Authorization': 'Bearer_${requester.token}' };
-    final status = (await http.delete('$baseUrl/$url', headers: header)).statusCode;
+    final status = (await http.delete(
+        '$baseUrl/${deleteble.deleteUrl}',
+        headers: header
+    )).statusCode;
     return status == 200;
   }
 
@@ -222,7 +226,7 @@ class AutoService implements BaseService {
   @override
   Future<bool> postNew(User poster, Postable postable) async {
     final status = (await http.post(
-      '$baseUrl/${postable.postUrl()}',
+      '$baseUrl/${postable.postUrl}',
       headers: {
         'Authorization': 'Bearer_${poster.token}',
         'Content-Type': 'application/json'

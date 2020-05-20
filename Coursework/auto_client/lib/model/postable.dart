@@ -1,6 +1,6 @@
 abstract class Postable {
 
   Map<String, dynamic> serialize();
-  String postUrl();
+  String get postUrl;
 
 }

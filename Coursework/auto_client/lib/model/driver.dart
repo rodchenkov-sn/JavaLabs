@@ -1,6 +1,7 @@
+import 'package:autoclient/model/deletable.dart';
 import 'package:autoclient/model/postable.dart';
 
-class Driver implements Postable {
+class Driver implements Postable, Deleteble {
 
   final int id;
   final String firstName;
@@ -25,7 +26,7 @@ class Driver implements Postable {
   );
 
   @override
-  String postUrl() => 'personnel';
+  String get postUrl => 'personnel';
 
   @override
   Map<String, dynamic> serialize() => fatherName == null ? {
@@ -36,5 +37,8 @@ class Driver implements Postable {
     'last_name': lastName,
     'father_name': fatherName
   };
+
+  @override
+  String get deleteUrl => 'personnel/$id';
 
 }
