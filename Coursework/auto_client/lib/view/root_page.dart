@@ -1,3 +1,4 @@
+import 'package:autoclient/presenter/main_page_presenter.dart';
 import 'package:autoclient/service/auto_service.dart';
 import 'package:flutter/material.dart';
 import 'package:autoclient/view/login_page.dart';
@@ -75,7 +76,10 @@ class _RootPageState extends State<RootPage> {
         );
         break;
       case AuthStatus.LOGGED_IN:
-          return HomePage(_user, widget.service);
+          return HomePage(MainPagePresenter(
+            user: _user,
+            service: widget.service
+          ));
         break;
       default:
         return buildWaitingScreen();

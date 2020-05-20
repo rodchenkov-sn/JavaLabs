@@ -1,37 +1,24 @@
-import 'package:autoclient/model/deletable.dart';
-import 'package:autoclient/model/postable.dart';
-import 'package:autoclient/view/component/screen/driver_input.dart';
-import 'package:autoclient/view/component/screen/route_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:autoclient/model/journal_data.dart';
-import 'package:autoclient/model/user.dart';
 import 'package:autoclient/model/route.dart' as r;
 import 'package:autoclient/model/journal_record.dart';
 import 'package:autoclient/model/driver.dart';
 import 'package:autoclient/model/automobile.dart';
+import 'package:autoclient/model/deletable.dart';
+import 'package:autoclient/model/postable.dart';
 
-import 'package:autoclient/service/auto_service.dart';
-
-import 'package:autoclient/view/component/cell/automobile_cell.dart';
-import 'package:autoclient/view/component/cell/driver_cell.dart';
-import 'package:autoclient/view/component/cell/error_cell.dart';
-import 'package:autoclient/view/component/cell/journal_cell.dart';
-import 'package:autoclient/view/component/cell/loading_cell.dart';
-import 'package:autoclient/view/component/cell/route_cell.dart';
-
-import 'package:autoclient/view/component/screen/details_screen.dart';
 import 'package:autoclient/view/component/dialog/error_dialog.dart';
 
 import 'package:autoclient/view/util/home_page_stage.dart';
 
+import 'package:autoclient/presenter/main_page_presenter.dart';
+
 class HomePage extends StatefulWidget {
 
-  final User user;
-  final BaseService service;
+  final MainPagePresenter presenter;
 
-  HomePage(this.user, this.service);
+  HomePage(this.presenter);
 
   @override
   State createState() => _HomePageStage();
@@ -41,12 +28,12 @@ class HomePage extends StatefulWidget {
 class _HomePageStage extends State<HomePage> {
 
   var _currStage = HomePageStage.NOT_DETERMINED;
-
+  
   @override
   Widget build(BuildContext context) {
     if (_currStage == HomePageStage.NOT_DETERMINED) {
       return FutureBuilder(
-        future: widget.service.refresh(widget.user),
+        future: widget.presenter.refresh(),
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting: return Center(
@@ -54,7 +41,8 @@ class _HomePageStage extends State<HomePage> {
             );
             default:
               if (snapshot.hasError) {
-                return ErrorCell('Error: ${snapshot.error}');
+                somethingWentWrong(context);
+                return build(context);
               } else {
                 _currStage = HomePageStage.JOURNAL;
                 return build(context);
@@ -73,7 +61,7 @@ class _HomePageStage extends State<HomePage> {
             DrawerHeader(
               child: Center(
                 child: Text(
-                  'Welcome back, ${widget.user.username}!',
+                  'OwO',
                   style: TextStyle(
                     fontFamily: "Open Sans",
                     fontSize: 20,
@@ -115,33 +103,11 @@ class _HomePageStage extends State<HomePage> {
   }
 
   void _onPressedAdd() {
-    switch (_currStage) {
-      case HomePageStage.ROUTES:
-        Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => RouteInput(
-                onCancel: () { Navigator.of(context).pop(); },
-                onSubmit: _postNew
-              ),
-            )
-        );
-        break;
-      case HomePageStage.PERSONNEL:
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => DriverInput(
-              onCancel: () { Navigator.of(context).pop(); },
-              onSubmit: _postNew
-            )
-          )
-        );
-        break;
-      default:
-    }
+    
   }
 
   void _postNew(Postable postable) {
-    widget.service.postNew(widget.user, postable).then((success) {
+    widget.presenter.post(postable).then((success) {
       if (!success) {
         somethingWentWrong(context);
       } else {
@@ -164,7 +130,7 @@ class _HomePageStage extends State<HomePage> {
   );
 
   void _refresh() {
-    widget.service.refresh(widget.user).then((value) {
+    widget.presenter.refresh().then((_) {
       setState(() {});
     });
   }
@@ -185,87 +151,31 @@ class _HomePageStage extends State<HomePage> {
   }
 
   Widget _makeRoutesPage() => _buildPage(
-    () => widget.service.getRoutes(),
-    () => widget.service.loadMoreRoutes(widget.user),
-    (r.Route route) => RouteCell(
-      route: route,
-      details: (r) => DetailsScreen(
-        title: route.name,
-        header: r,
-        onSelect: (_) => _delete(route.journalRecords.isEmpty, route),
-        dataProvider: _getJournalCards(route.journalRecords),
-      ),
-    )
+    widget.presenter.getRoutes,
+    widget.presenter.loadMoreRoutes,
+    (r.Route route) 
+      => widget.presenter.makeRouteCell(route, _delete)
   );
 
   Widget _makeJournalPage() => _buildPage(
-    () => widget.service.getJournal(),
-    () => widget.service.loadMoreJournal(widget.user),
-    (JournalRecord journal) {
-      return FutureBuilder(
-        future: widget.service.getJournalData(widget.user, journal),
-        builder: (BuildContext context, AsyncSnapshot<JournalData> snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting: return LoadingCell();
-            default:
-              if (snapshot.hasError)
-                return ErrorCell('Error: ${snapshot.error}');
-              else
-                return JournalCell(
-                  journalRecord: journal,
-                  route: snapshot.data.route,
-                  automobile: snapshot.data.automobile,
-                  driver: snapshot.data.driver,
-                  details: (header) => DetailsScreen(
-                    title: 'Journal record',
-                    header: header,
-                    onSelect: (_) => _delete(true, journal),
-                    dataProvider: Stream<List<Widget>>.empty(),
-                  ),
-                );
-          }
-        },
-      );
-    }
+    widget.presenter.getJournal,
+    widget.presenter.loadMoreJournal,
+    (JournalRecord journal) 
+      => widget.presenter.makeJournalCell(journal, _delete)
   );
 
   Widget _makePersonnelPage() => _buildPage(
-    () => widget.service.getPersonnel(),
-    () => widget.service.loadMorePersonnel(widget.user),
-    (Driver driver) => DriverCell(
-      driver: driver,
-      details: (d) => DetailsScreen(
-        title: '${driver.firstName} ${driver.lastName}',
-        header: d,
-        onSelect: (_) => _delete(driver.automobiles.isEmpty, driver),
-        dataProvider: widget.service.getAutomobilesByIds(
-          widget.user,
-          driver.automobiles
-        ).map((List<Automobile> as) =>
-            as.map((a) =>
-                _makeAutomobileCell(a, driver)).toList())
-      ),
-    )
+    widget.presenter.getPersonnel,
+    widget.presenter.loadMorePersonnel,
+    (Driver driver) 
+      => widget.presenter.makeDriverCell(driver, _delete)
   );
 
   Widget _makeAutomobilesPage() => _buildPage(
-    () => widget.service.getAutomobiles(),
-    () => widget.service.loadMoreAutomobiles(widget.user),
-    (Automobile automobile) {
-      return FutureBuilder(
-        future: widget.service.getDriverById(widget.user, automobile.driverId),
-        builder: (BuildContext context, AsyncSnapshot<Driver> snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting: return LoadingCell();
-            default:
-              if (snapshot.hasError)
-                return ErrorCell('Error: ${snapshot.error}');
-              else
-                return _makeAutomobileCell(automobile, snapshot.data);
-          }
-        },
-      );
-    }
+    widget.presenter.getAutomobiles,
+    widget.presenter.loadMoreAutomobiles,
+    (Automobile automobile) 
+      => widget.presenter.makeAutomobileCell(automobile, _delete)
   );
 
   Widget _buildPage<T>(
@@ -285,50 +195,13 @@ class _HomePageStage extends State<HomePage> {
       return cellBuilder(dataProvider()[row]);
     },
   );
-  
-  Stream<List<Widget>> _getJournalCards(List<int> jIds) async* {
-    var widgets = <Widget>[];
-    for (final jId in jIds) {
-      final j = await widget.service.getJournalById(widget.user, jId);
-      final r = await widget.service.getRouteById(widget.user, j.routeId);
-      final a = await widget.service.getAutomobileById(widget.user, j.automobileId);
-      final d = await widget.service.getDriverById(widget.user, a.driverId);
-      widgets.add(JournalCell(
-        journalRecord: j,
-        automobile: a,
-        route: r,
-        driver: d,
-        details: (journal) => DetailsScreen(
-          title: 'Journal record',
-          header: journal,
-          onSelect: (_) => _delete(true, j),
-          dataProvider: Stream<List<Widget>>.empty(),
-        ),
-      ));
-      yield widgets;
-    }
-  }
-
-  Widget _makeAutomobileCell(
-    Automobile automobile,
-    Driver driver
-  ) => AutomobileCell(
-    automobile: automobile,
-    driver: driver,
-    details: (header) => DetailsScreen(
-      title: '${automobile.color} ${automobile.mark}',
-      header: header,
-      onSelect: (_) => _delete(automobile.journalRecords.isEmpty, automobile),
-      dataProvider: _getJournalCards(automobile.journalRecords),
-    )
-  );
 
   void _delete(bool canBeDeleted, Deleteble item) {
     if (canBeDeleted) {
-      widget.service.delete(widget.user, item).then((success) {
+      widget.presenter.delete(item).then((success) {
         if (success) {
           Navigator.of(context).popUntil((route) => route.isFirst);
-          widget.service.refresh(widget.user).then((value) {
+          widget.presenter.refresh().then((value) {
             setState(() {});
           });
         } else {

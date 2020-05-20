@@ -10,22 +10,22 @@ class Automobile implements Postable, Deleteble {
   final int driverId;
   final List<int> journalRecords;
 
-  Automobile(
+  Automobile({
     this.id,
     this.num,
     this.color,
     this.mark,
     this.driverId,
     this.journalRecords
-  );
+  });
 
   factory Automobile.fromJson(Map<String, dynamic> json) => Automobile(
-    json['id'],
-    json['num'],
-    json['color'],
-    json['mark'],
-    json['driver_id'],
-    json['journal_record_ids'].cast<int>()
+    id:             json['id'],
+    num:            json['num'],
+    color:          json['color'],
+    mark:           json['mark'],
+    driverId:       json['driver_id'],
+    journalRecords: json['journal_record_ids'].cast<int>()
   );
 
   @override
