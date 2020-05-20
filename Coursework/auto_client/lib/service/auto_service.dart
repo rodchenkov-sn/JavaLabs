@@ -4,6 +4,7 @@ import 'package:autoclient/model/automobile.dart';
 import 'package:autoclient/model/driver.dart';
 import 'package:autoclient/model/journal_data.dart';
 import 'package:autoclient/model/journal_record.dart';
+import 'package:autoclient/model/postable.dart';
 import 'package:autoclient/model/route.dart';
 import 'package:autoclient/model/user.dart';
 
@@ -34,6 +35,8 @@ abstract class BaseService {
 
   Future<void> refresh(User requester);
   Future<bool> delete(User requester, String url);
+  
+  Future<bool> postNew(User poster, Postable postable);
 
 }
 
@@ -203,9 +206,8 @@ class AutoService implements BaseService {
   @override
   Future<bool> delete(User requester, String url) async {
     final header = { 'Authorization': 'Bearer_${requester.token}' };
-    final response = (await http.delete('$baseUrl/$url', headers: header)).body;
-    print(response);
-    return response == 'ok';
+    final status = (await http.delete('$baseUrl/$url', headers: header)).statusCode;
+    return status == 200;
   }
 
   @override
@@ -215,6 +217,19 @@ class AutoService implements BaseService {
     jd.driver = await getDriverById(requester, jd.automobile.id);
     jd.route = await getRouteById(requester, jr.routeId);
     return jd;
+  }
+
+  @override
+  Future<bool> postNew(User poster, Postable postable) async {
+    final status = (await http.post(
+      '$baseUrl/${postable.postUrl()}',
+      headers: {
+        'Authorization': 'Bearer_${poster.token}',
+        'Content-Type': 'application/json'
+      },
+      body: json.encode(postable.serialize())
+    )).statusCode;
+    return status == 200;
   }
 
 }

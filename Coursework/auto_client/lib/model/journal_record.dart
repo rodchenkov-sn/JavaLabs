@@ -1,4 +1,6 @@
-class JournalRecord {
+import 'package:autoclient/model/postable.dart';
+
+class JournalRecord implements Postable {
 
   final int id;
   final DateTime timeIn;
@@ -15,5 +17,16 @@ class JournalRecord {
     json['automobile_id'],
     json['route_id']
   );
+
+  @override
+  String postUrl() => 'journal';
+
+  @override
+  Map<String, dynamic> serialize() => {
+    'time_in': timeIn.microsecondsSinceEpoch,
+    'time_out': timeOut.microsecondsSinceEpoch,
+    'automobile_id': automobileId,
+    'route_id': routeId
+  };
 
 }

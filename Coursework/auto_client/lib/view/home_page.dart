@@ -1,3 +1,4 @@
+import 'package:autoclient/view/component/screen/route_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ import 'package:autoclient/view/component/cell/journal_cell.dart';
 import 'package:autoclient/view/component/cell/loading_cell.dart';
 import 'package:autoclient/view/component/cell/route_cell.dart';
 
-import 'package:autoclient/view/component/details/details_screen.dart';
+import 'package:autoclient/view/component/screen/details_screen.dart';
 import 'package:autoclient/view/component/dialog/error_dialog.dart';
 
 import 'package:autoclient/view/util/home_page_stage.dart';
@@ -105,9 +106,43 @@ class _HomePageStage extends State<HomePage> {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: () {},
+        onPressed: _onPressedAdd,
       ),
     );
+  }
+
+
+
+  void _onPressedAdd() {
+    switch (_currStage) {
+      case HomePageStage.JOURNAL:
+        // TODO: Handle this case.
+        break;
+      case HomePageStage.ROUTES:
+        Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => RouteInput(
+                onCancel: () { Navigator.of(context).pop(); },
+                onSubmit: (r.Route newRoute) {
+                  widget.service.postNew(widget.user, newRoute).then((success) {
+                    Navigator.of(context).pop();
+                    if (!success) {
+                      somethingWentWrong(context);
+                    }
+                  });
+                },
+              ),
+            )
+        );
+        break;
+      case HomePageStage.AUTOMOBILES:
+        // TODO: Handle this case.
+        break;
+      case HomePageStage.PERSONNEL:
+        // TODO: Handle this case.
+        break;
+      default:
+    }
   }
 
   Widget _makeAppBar(HomePageStage stage) => AppBar(

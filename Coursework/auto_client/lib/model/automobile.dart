@@ -1,4 +1,6 @@
-class Automobile {
+import 'package:autoclient/model/postable.dart';
+
+class Automobile implements Postable {
 
   final int id;
   final String num;
@@ -24,5 +26,16 @@ class Automobile {
     json['driver_id'],
     json['journal_record_ids'].cast<int>()
   );
+
+  @override
+  String postUrl() => 'automobiles';
+
+  @override
+  Map<String, dynamic> serialize() => {
+    'num': num,
+    'color': color,
+    'mark': mark,
+    'driver_id': driverId
+  };
 
 }
