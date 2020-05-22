@@ -4,20 +4,14 @@ import 'package:flutter/material.dart';
 class RouteCell extends StatelessWidget {
 
   final r.Route route;
-  final Widget Function(Widget) details;
+  final void Function(Widget) onTap;
 
-  RouteCell({this.route, this.details});
+  RouteCell({this.route, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-      Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => details(this),
-          )
-        );
-      },
+      onTap: () => onTap(this),
       child: Card(
         elevation: 10,
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),

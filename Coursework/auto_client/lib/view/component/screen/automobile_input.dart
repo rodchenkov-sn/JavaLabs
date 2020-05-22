@@ -48,7 +48,7 @@ class _AutomobileInputState extends State<AutomobileInput> {
               child: Wrap(
                 children: <Widget> [
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Mark',
@@ -60,7 +60,7 @@ class _AutomobileInputState extends State<AutomobileInput> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Color',
@@ -72,7 +72,7 @@ class _AutomobileInputState extends State<AutomobileInput> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'Number',

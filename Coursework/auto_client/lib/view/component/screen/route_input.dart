@@ -42,7 +42,7 @@ class _RouteInputState extends State<RouteInput> {
           child: Wrap(
             children: <Widget> [
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
                   decoration: const InputDecoration(
                     icon: Icon(Icons.map),

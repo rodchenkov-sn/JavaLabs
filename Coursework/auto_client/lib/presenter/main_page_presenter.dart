@@ -12,7 +12,13 @@ import 'package:autoclient/view/component/cell/error_cell.dart';
 import 'package:autoclient/view/component/cell/journal_cell.dart';
 import 'package:autoclient/view/component/cell/loading_cell.dart';
 import 'package:autoclient/view/component/cell/route_cell.dart';
+import 'package:autoclient/view/component/screen/automobile_input.dart';
 import 'package:autoclient/view/component/screen/details_screen.dart';
+import 'package:autoclient/view/component/screen/driver_input.dart';
+import 'package:autoclient/view/component/screen/dynamic_table.dart';
+import 'package:autoclient/view/component/screen/journal_input.dart';
+import 'package:autoclient/view/component/screen/route_input.dart';
+import 'package:autoclient/view/util/home_page_stage.dart';
 import 'package:flutter/material.dart';
 import 'package:autoclient/model/route.dart' as r;
 
@@ -27,7 +33,8 @@ class MainPagePresenter {
   });
 
   Stream<List<Widget>> getJournalCards(
-      List<int> jIds, void Function(bool, Deleteble) onDelete
+      List<int> jIds, void Function(bool, Deleteble) onDelete,
+      BuildContext context
   ) async* {
     var widgets = <Widget>[];
     for (final jId in jIds) {
@@ -40,11 +47,15 @@ class MainPagePresenter {
         automobile: a,
         route: r,
         driver: d,
-        details: (journal) => DetailsScreen(
-          title: 'Journal record',
-          header: journal,
-          onSelect: (_) => onDelete(true, j),
-          dataProvider: Stream<List<Widget>>.empty(),
+        onTap: (journal) => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => DetailsScreen(
+              title: 'Journal record',
+              header: journal,
+              onSelect: (_) => onDelete(true, j),
+              dataProvider: Stream<List<Widget>>.empty(),
+            )
+          )
         ),
       ));
       yield widgets;
@@ -52,8 +63,8 @@ class MainPagePresenter {
   }
 
   Widget makeAutomobileCell(
-    Automobile automobile,
-    void Function(bool, Deleteble) onDelete
+    Automobile automobile, void Function(bool, Deleteble) onDelete,
+    BuildContext context, { void Function(Widget) onTap }
   ) => FutureBuilder(
     future: service.getDriverById(user, automobile.driverId),
     builder: (BuildContext context, AsyncSnapshot<Driver> snapshot) {
@@ -64,23 +75,30 @@ class MainPagePresenter {
           if (snapshot.hasError)
             return ErrorCell('Error: ${snapshot.error}');
           else
-            return _makeAutomobileCell(automobile, snapshot.data, onDelete);
+            return onTap == null ? _makeAutomobileCell(
+                automobile, snapshot.data, onDelete, context
+            ) : _makeAutomobileCell(
+                automobile, snapshot.data, onDelete, context, onTap: onTap
+            );
       }
     },
   );
 
   Widget _makeAutomobileCell(
-    Automobile automobile,
-    Driver driver,
-    void Function(bool, Deleteble) onDelete
+    Automobile automobile, Driver driver, void Function(bool, Deleteble) onDelete,
+    BuildContext context, { void Function(Widget) onTap }
   ) => AutomobileCell(
     automobile: automobile,
     driver: driver,
-    details: (header) => DetailsScreen(
-      title: '${automobile.color} ${automobile.mark}',
-      header: header,
-      onSelect: (_) => onDelete(automobile.journalRecords.isEmpty, automobile),
-      dataProvider: getJournalCards(automobile.journalRecords, onDelete),
+    onTap: onTap != null ? onTap : (header) => Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => DetailsScreen(
+          title: '${automobile.color} ${automobile.mark}',
+          header: header,
+          onSelect: (_) => onDelete(automobile.journalRecords.isEmpty, automobile),
+          dataProvider: getJournalCards(automobile.journalRecords, onDelete, ctx),
+        )
+      )
     )
   );
 
@@ -102,44 +120,167 @@ class MainPagePresenter {
               route: snapshot.data.route,
               automobile: snapshot.data.automobile,
               driver: snapshot.data.driver,
-              details: (header) => DetailsScreen(
-                title: 'Journal record',
-                header: header,
-                onSelect: (_) => onDelete(true, journal),
-                dataProvider: Stream<List<Widget>>.empty(),
-              ),
+              onTap: (header) => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => DetailsScreen(
+                    title: 'Journal record',
+                    header: header,
+                    onSelect: (_) => onDelete(true, journal),
+                    dataProvider: Stream<List<Widget>>.empty(),
+                  ),
+                )
+              )
             );
       }
     }
   );
 
   Widget makeRouteCell(
-    r.Route route,
-    void Function(bool, Deleteble) onDelete
+    r.Route route, void Function(bool, Deleteble) onDelete, BuildContext context
   ) => RouteCell(
     route: route,
-    details: (r) => DetailsScreen(
-      title: route.name,
-      header: r,
-      onSelect: (_) => onDelete(route.journalRecords.isEmpty, route),
-      dataProvider: getJournalCards(route.journalRecords, onDelete),
-    ),
+    onTap: (r) => Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => DetailsScreen(
+          title: route.name,
+          header: r,
+          onSelect: (_) => onDelete(route.journalRecords.isEmpty, route),
+          dataProvider: getJournalCards(route.journalRecords, onDelete, ctx),
+        ),
+      )
+    )
   );
 
   Widget makeDriverCell(
-    Driver driver,
-    void Function(bool, Deleteble) onDelete
+    Driver driver, void Function(bool, Deleteble) onDelete, BuildContext context
   ) => DriverCell(
     driver: driver,
-    details: (d) => DetailsScreen(
-      title: '${driver.firstName} ${driver.lastName}',
-      header: d,
-      onSelect: (_) => onDelete(driver.automobiles.isEmpty, driver),
-      dataProvider: service.getAutomobilesByIds(user, driver.automobiles)
-          .map((List<Automobile> as) => as
-          .map((a) => _makeAutomobileCell(a, driver, onDelete)).toList())
-    ),
+    onTap: (d) => Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) =>  DetailsScreen(
+          title: '${driver.firstName} ${driver.lastName}',
+          header: d,
+          onSelect: (_) => onDelete(driver.automobiles.isEmpty, driver),
+          dataProvider: service.getAutomobilesByIds(user, driver.automobiles)
+            .map((List<Automobile> as) => as.map(
+                  (a) => _makeAutomobileCell(a, driver, onDelete, ctx)).toList())
+        ),
+      )
+    )
   );
+
+  void showInsertPage(
+    HomePageStage stage,
+    BuildContext context,
+    void Function(Postable) onPost
+  ) {
+    switch (stage) {
+      case HomePageStage.JOURNAL:
+        Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (ctx) => JournalInput(
+                  onSubmit: onPost,
+                  onCancel: () => Navigator.of(ctx).pop(),
+                  pickAutomobile: (void Function(Automobile) callback) {
+                    Navigator.of(ctx).push(
+                        MaterialPageRoute(
+                            builder: (ctx) => Scaffold(
+                              appBar: AppBar(title: Text('Pick Automobile')),
+                              body: DynamicTable<Automobile>(
+                                dataProvider: getAutomobiles,
+                                onUpdate: loadMoreAutomobiles,
+                                cellBuilder: (automobile) =>
+                                  makeAutomobileCell(
+                                    automobile,
+                                    (_, __) {},
+                                    ctx,
+                                    onTap: (_) {
+                                      Navigator.of(ctx).pop();
+                                      callback(automobile);
+                                    }
+                                  )
+                              )
+                            )
+                        )
+                    );
+                  },
+                  pickRoute: (void Function(r.Route) callback) {
+                    Navigator.of(ctx).push(
+                        MaterialPageRoute(
+                            builder: (ctx) => Scaffold(
+                                appBar: AppBar(title: Text('Pick route')),
+                                body: DynamicTable<r.Route>(
+                                    dataProvider: getRoutes,
+                                    onUpdate: loadMoreRoutes,
+                                    cellBuilder: (route) => RouteCell(
+                                      route: route,
+                                      onTap: (_) {
+                                        Navigator.of(ctx).pop();
+                                        callback(route);
+                                      },
+                                    )
+                                )
+                            )
+                        )
+                    );
+                  },
+                )
+            )
+        );
+        break;
+      case HomePageStage.ROUTES:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (ctx) => RouteInput(
+              onSubmit: onPost,
+              onCancel: () => Navigator.of(ctx).pop(),
+            )
+          )
+        );
+        break;
+      case HomePageStage.AUTOMOBILES:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (ctx) => AutomobileInput(
+              onSubmit: onPost,
+              onCancel: () => Navigator.of(ctx).pop(),
+              pickDriver: (void Function(Driver) callback) {
+                Navigator.of(ctx).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => Scaffold(
+                      appBar: AppBar(title: Text('Pick driver')),
+                      body: DynamicTable<Driver>(
+                        dataProvider: getPersonnel,
+                        onUpdate: loadMorePersonnel,
+                        cellBuilder: (Driver driver) => DriverCell(
+                          driver: driver,
+                          onTap: (_) {
+                            Navigator.of(ctx).pop();
+                            callback(driver);
+                          },
+                        ),
+                      )
+                    )
+                  )
+                );
+              },
+            )
+          )
+        );
+        break;
+      case HomePageStage.PERSONNEL:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (ctx) => DriverInput(
+              onSubmit: onPost,
+              onCancel: () => Navigator.of(ctx).pop(),
+            )
+          )
+        );
+        break;
+      default:
+    }
+  }
 
   Future<bool> delete(Deleteble deleteble) => service.delete(user, deleteble);
   Future<bool> post(Postable postable) => service.postNew(user, postable);

@@ -39,3 +39,23 @@ void showDependenciesError(BuildContext context) {
       }
   );
 }
+
+void showPeriodError(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text('Invalid time period'),
+          content: Text('Time in must be after time out'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      }
+  );
+}

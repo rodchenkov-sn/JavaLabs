@@ -1,6 +1,8 @@
 import 'package:autoclient/model/deletable.dart';
 import 'package:autoclient/model/postable.dart';
 
+import 'package:intl/intl.dart';
+
 class JournalRecord implements Postable, Deleteble {
 
   final int id;
@@ -9,14 +11,14 @@ class JournalRecord implements Postable, Deleteble {
   final int automobileId;
   final int routeId;
 
-  JournalRecord(this.id, this.timeIn, this.timeOut, this.automobileId, this.routeId);
+  JournalRecord({this.id, this.timeIn, this.timeOut, this.automobileId, this.routeId});
 
   factory JournalRecord.fromJson(Map<String, dynamic> json) => JournalRecord(
-    json['id'],
-    DateTime.fromMicrosecondsSinceEpoch(json['time_in']),
-    DateTime.fromMicrosecondsSinceEpoch(json['time_out']),
-    json['automobile_id'],
-    json['route_id']
+    id:           json['id'],
+    timeIn:       DateTime.fromMillisecondsSinceEpoch(json['time_in']),
+    timeOut:      DateTime.fromMillisecondsSinceEpoch(json['time_out']),
+    automobileId: json['automobile_id'],
+    routeId:      json['route_id']
   );
 
   @override
@@ -24,13 +26,16 @@ class JournalRecord implements Postable, Deleteble {
 
   @override
   Map<String, dynamic> serialize() => {
-    'time_in': timeIn.microsecondsSinceEpoch,
-    'time_out': timeOut.microsecondsSinceEpoch,
+    'time_in': timeIn.millisecondsSinceEpoch,
+    'time_out': timeOut.millisecondsSinceEpoch,
     'automobile_id': automobileId,
     'route_id': routeId
   };
 
   @override
   String get deleteUrl => 'journal/$id';
+
+  String get prettyTimeIn  => DateFormat('dd.MM.y HH:mm').format(timeIn);
+  String get prettyTimeOut => DateFormat('dd.MM.y HH:mm').format(timeOut);
 
 }

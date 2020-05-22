@@ -55,7 +55,7 @@ class _DriverInputState extends State<DriverInput> {
           child: Wrap(
             children: <Widget> [
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'First name',
@@ -67,7 +67,7 @@ class _DriverInputState extends State<DriverInput> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
                     decoration: const InputDecoration(
                       labelText: 'Last name',
@@ -79,7 +79,7 @@ class _DriverInputState extends State<DriverInput> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(10.0),
                 child: TextFormField(
                     decoration: const InputDecoration(
                       labelText: 'Father name',

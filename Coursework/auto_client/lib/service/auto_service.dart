@@ -218,7 +218,7 @@ class AutoService implements BaseService {
   Future<JournalData> getJournalData(User requester, JournalRecord jr) async {
     var jd = JournalData();
     jd.automobile = await getAutomobileById(requester, jr.automobileId);
-    jd.driver = await getDriverById(requester, jd.automobile.id);
+    jd.driver = await getDriverById(requester, jd.automobile.driverId);
     jd.route = await getRouteById(requester, jr.routeId);
     return jd;
   }

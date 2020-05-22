@@ -10,26 +10,20 @@ class JournalCell extends StatelessWidget {
   final r.Route route;
   final Automobile automobile;
   final Driver driver;
-  final Widget Function(Widget) details;
+  final void Function(Widget) onTap;
 
   JournalCell({
     this.journalRecord,
     this.route,
     this.automobile,
     this.driver,
-    this.details
+    this.onTap
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => details(this),
-            )
-        );
-      },
+      onTap: () => onTap(this),
       child: Card(
         elevation: 10,
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -40,16 +34,8 @@ class JournalCell extends StatelessWidget {
                 Icons.access_time,
                 color: Colors.blueGrey,
               ),
-              title: Text(
-                '${journalRecord.timeIn.day}.${journalRecord.timeIn.month}'
-                    + ' ${journalRecord.timeIn.hour}'
-                    + ':${journalRecord.timeIn.minute}'
-              ),
-              subtitle: Text(
-                  '${journalRecord.timeOut.day}.${journalRecord.timeOut.month}'
-                      + ' ${journalRecord.timeOut.hour}'
-                      + ':${journalRecord.timeOut.minute}'
-              ),
+              title: Text(journalRecord.prettyTimeOut),
+              subtitle: Text(journalRecord.prettyTimeIn),
             ),
             Divider(
               color: Colors.blueGrey,

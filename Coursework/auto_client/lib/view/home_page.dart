@@ -1,3 +1,4 @@
+import 'package:autoclient/view/component/screen/dynamic_table.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -97,16 +98,14 @@ class _HomePageStage extends State<HomePage> {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: _onPressedAdd,
+        onPressed: () => widget.presenter.showInsertPage(
+            _currStage, context, _onPost
+        ),
       ),
     );
   }
 
-  void _onPressedAdd() {
-    
-  }
-
-  void _postNew(Postable postable) {
+  void _onPost(Postable postable) {
     widget.presenter.post(postable).then((success) {
       if (!success) {
         somethingWentWrong(context);
@@ -150,50 +149,32 @@ class _HomePageStage extends State<HomePage> {
     }
   }
 
-  Widget _makeRoutesPage() => _buildPage(
-    widget.presenter.getRoutes,
-    widget.presenter.loadMoreRoutes,
-    (r.Route route) 
-      => widget.presenter.makeRouteCell(route, _delete)
+  Widget _makeRoutesPage() => DynamicTable<r.Route>(
+      dataProvider: widget.presenter.getRoutes,
+      onUpdate: widget.presenter.loadMoreRoutes,
+      cellBuilder: (r.Route route)
+        => widget.presenter.makeRouteCell(route, _delete, context)
   );
 
-  Widget _makeJournalPage() => _buildPage(
-    widget.presenter.getJournal,
-    widget.presenter.loadMoreJournal,
-    (JournalRecord journal) 
-      => widget.presenter.makeJournalCell(journal, _delete)
+  Widget _makeJournalPage() => DynamicTable<JournalRecord>(
+      dataProvider: widget.presenter.getJournal,
+      onUpdate: widget.presenter.loadMoreJournal,
+      cellBuilder: (JournalRecord journal)
+        => widget.presenter.makeJournalCell(journal, _delete)
   );
 
-  Widget _makePersonnelPage() => _buildPage(
-    widget.presenter.getPersonnel,
-    widget.presenter.loadMorePersonnel,
-    (Driver driver) 
-      => widget.presenter.makeDriverCell(driver, _delete)
+  Widget _makePersonnelPage() => DynamicTable<Driver>(
+    dataProvider: widget.presenter.getPersonnel,
+    onUpdate: widget.presenter.loadMorePersonnel,
+    cellBuilder: (Driver driver)
+      => widget.presenter.makeDriverCell(driver, _delete, context)
   );
 
-  Widget _makeAutomobilesPage() => _buildPage(
-    widget.presenter.getAutomobiles,
-    widget.presenter.loadMoreAutomobiles,
-    (Automobile automobile) 
-      => widget.presenter.makeAutomobileCell(automobile, _delete)
-  );
-
-  Widget _buildPage<T>(
-    List<T> Function() dataProvider,
-    Future<int> Function() onUpdate,
-    Widget Function(T) cellBuilder
-  ) => ListView.builder(
-    itemCount: dataProvider().length,
-    itemBuilder: (_, int row) {
-      if (row == dataProvider().length - 1) {
-        onUpdate().then((int value) {
-          if (value != 0) {
-            setState(() {});
-          }
-        });
-      }
-      return cellBuilder(dataProvider()[row]);
-    },
+  Widget _makeAutomobilesPage() => DynamicTable<Automobile>(
+    dataProvider: widget.presenter.getAutomobiles,
+    onUpdate: widget.presenter.loadMoreAutomobiles,
+    cellBuilder: (Automobile automobile)
+      => widget.presenter.makeAutomobileCell(automobile, _delete, context)
   );
 
   void _delete(bool canBeDeleted, Deleteble item) {
