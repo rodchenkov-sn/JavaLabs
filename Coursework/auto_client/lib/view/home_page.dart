@@ -62,11 +62,10 @@ class _HomePageStage extends State<HomePage> {
             DrawerHeader(
               child: Center(
                 child: Text(
-                  'OwO',
+                  widget.presenter.username,
                   style: TextStyle(
                     fontFamily: "Open Sans",
                     fontSize: 20,
-                    fontStyle: FontStyle.italic
                   ),
                 ),
               ),
@@ -93,7 +92,7 @@ class _HomePageStage extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.blueGrey,
         child: Icon(
           Icons.add,
           color: Colors.white,

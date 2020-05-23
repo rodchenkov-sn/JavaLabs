@@ -8,9 +8,8 @@ import 'package:autoclient/model/driver.dart';
 class DriverInput extends StatefulWidget {
 
   final void Function(Driver) onSubmit;
-  final void Function() onCancel;
 
-  DriverInput({Key key, this.onSubmit, this.onCancel}) : super(key: key);
+  DriverInput({Key key, this.onSubmit}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DriverInputState();
@@ -99,15 +98,6 @@ class _DriverInputState extends State<DriverInput> {
     ),
     bottomNavigationBar: ButtonBar(
       children: <Widget>[
-        FlatButton(
-          child: Text(
-            'Cancel',
-            style: TextStyle(
-                fontSize: 20
-            ),
-          ),
-          onPressed: widget.onCancel,
-        ),
         FlatButton(
           child: Text(
             'Submit',

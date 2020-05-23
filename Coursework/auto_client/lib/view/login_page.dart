@@ -173,14 +173,14 @@ class _LoginPageState extends State<LoginPage> {
   );
 
   Widget showPrimaryButton() => Padding(
-    padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+    padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
     child: SizedBox(
       height: 40.0,
       child: new RaisedButton(
         elevation: 5.0,
         shape: new RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(5)),
-        color: Colors.grey,
+        color: Colors.blueGrey,
         child: new Text(
             'LOGIN',
             style: new TextStyle(fontSize: 20.0, color: Colors.white)

@@ -7,9 +7,8 @@ import 'package:autoclient/model/route.dart' as r;
 class RouteInput extends StatefulWidget {
 
   final void Function(r.Route) onSubmit;
-  final void Function() onCancel;
 
-  RouteInput({Key key, this.onSubmit, this.onCancel}) : super(key: key);
+  RouteInput({Key key, this.onSubmit}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _RouteInputState();
@@ -63,15 +62,6 @@ class _RouteInputState extends State<RouteInput> {
     ),
     bottomNavigationBar: ButtonBar(
       children: <Widget>[
-        FlatButton(
-          child: Text(
-            'Cancel',
-            style: TextStyle(
-              fontSize: 20
-            ),
-          ),
-          onPressed: widget.onCancel,
-        ),
         FlatButton(
           child: Text(
             'Submit',

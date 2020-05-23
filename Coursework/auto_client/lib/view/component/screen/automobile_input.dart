@@ -7,10 +7,9 @@ import 'package:flutter/services.dart';
 class AutomobileInput extends StatefulWidget {
 
   final void Function(Automobile) onSubmit;
-  final void Function() onCancel;
   final void Function(void Function(Driver)) pickDriver;
 
-  AutomobileInput({Key key, this.onSubmit, this.onCancel, this.pickDriver}) : super(key: key);
+  AutomobileInput({Key key, this.onSubmit, this.pickDriver}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AutomobileInputState();
@@ -92,15 +91,6 @@ class _AutomobileInputState extends State<AutomobileInput> {
     ),
     bottomNavigationBar: ButtonBar(
       children: <Widget>[
-        FlatButton(
-          child: Text(
-            'Cancel',
-            style: TextStyle(
-                fontSize: 20
-            ),
-          ),
-          onPressed: widget.onCancel,
-        ),
         FlatButton(
           child: Text(
             'Submit',

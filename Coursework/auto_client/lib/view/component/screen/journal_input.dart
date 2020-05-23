@@ -9,13 +9,11 @@ import 'package:intl/intl.dart';
 class JournalInput extends StatefulWidget {
 
   final void Function(JournalRecord) onSubmit;
-  final void Function() onCancel;
   final void Function(void Function(Automobile)) pickAutomobile;
   final void Function(void Function(r.Route)) pickRoute;
 
   JournalInput({
     this.onSubmit,
-    this.onCancel,
     this.pickAutomobile,
     this.pickRoute
   });
@@ -78,15 +76,6 @@ class _JournalInputState extends State<JournalInput> {
     ),
     bottomNavigationBar: ButtonBar(
       children: <Widget>[
-        FlatButton(
-          child: Text(
-            'Cancel',
-            style: TextStyle(
-                fontSize: 20
-            ),
-          ),
-          onPressed: widget.onCancel,
-        ),
         FlatButton(
           child: Text(
             'Submit',

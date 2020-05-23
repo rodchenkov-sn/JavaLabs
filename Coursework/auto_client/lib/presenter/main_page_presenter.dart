@@ -180,7 +180,6 @@ class MainPagePresenter {
             MaterialPageRoute(
                 builder: (ctx) => JournalInput(
                   onSubmit: onPost,
-                  onCancel: () => Navigator.of(ctx).pop(),
                   pickAutomobile: (void Function(Automobile) callback) {
                     Navigator.of(ctx).push(
                         MaterialPageRoute(
@@ -233,7 +232,6 @@ class MainPagePresenter {
           MaterialPageRoute(
             builder: (ctx) => RouteInput(
               onSubmit: onPost,
-              onCancel: () => Navigator.of(ctx).pop(),
             )
           )
         );
@@ -243,7 +241,6 @@ class MainPagePresenter {
           MaterialPageRoute(
             builder: (ctx) => AutomobileInput(
               onSubmit: onPost,
-              onCancel: () => Navigator.of(ctx).pop(),
               pickDriver: (void Function(Driver) callback) {
                 Navigator.of(ctx).push(
                   MaterialPageRoute(
@@ -273,7 +270,6 @@ class MainPagePresenter {
           MaterialPageRoute(
             builder: (ctx) => DriverInput(
               onSubmit: onPost,
-              onCancel: () => Navigator.of(ctx).pop(),
             )
           )
         );
@@ -295,5 +291,7 @@ class MainPagePresenter {
   Future<int> loadMoreAutomobiles() => service.loadMoreAutomobiles(user);
   Future<int> loadMorePersonnel()   => service.loadMorePersonnel(user);
   Future<int> loadMoreRoutes()      => service.loadMoreRoutes(user);
+
+  String get username => user.username;
 
 }
